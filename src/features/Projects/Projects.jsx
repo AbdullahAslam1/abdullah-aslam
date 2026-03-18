@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap, ScrollTrigger } from '../../utils/gsap-setup.js';
+import useWindowSize from '../../hooks/useWindowSize.js';
 import { PROJECTS, PROJECT_ART } from './projects.data.jsx';
 import './Projects.css';
 
@@ -78,11 +79,12 @@ function CaseSection({ section }) {
 
 // ── ProjectCard ──────────────────────────────────────────────
 function ProjectCard({ project, isFeatured, isActive, onSelect }) {
-  const cardRef = useRef(null);
+  const cardRef   = useRef(null);
+  const { width } = useWindowSize();
 
   useEffect(() => {
     const card = cardRef.current;
-    if (!card) return;
+    if (!card || width < 1024) return;
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -274,8 +276,8 @@ function CaseStudyModal({ project, isOpen, onClose }) {
 
       // Start from known state
       gsap.set(backdrop, { opacity: 0 });
-      gsap.set(modal, { opacity: 0, scale: 0.965, y: 28, transformOrigin: '50% 40%' });
-      gsap.set(contentTargets, { opacity: 0, y: 16 });
+      gsap.set(modal, { opacity: 0, scale: 0.965, y: "2.8vh", transformOrigin: '50% 40%' });
+      gsap.set(contentTargets, { opacity: 0, y: "1.6vh" });
 
       tl.to(backdrop, { opacity: 1, duration: 0.4, ease: 'sine.out' })
         .to(modal, {
@@ -316,7 +318,7 @@ function CaseStudyModal({ project, isOpen, onClose }) {
 
       tl.to(contentTargets, {
         opacity: 0,
-        y: 10,
+        y: "1vh",
         stagger: 0.03,
         duration: 0.26,
         ease: 'sine.inOut',
@@ -324,7 +326,7 @@ function CaseStudyModal({ project, isOpen, onClose }) {
         .to(modal, {
           opacity: 0,
           scale: 0.982,
-          y: 14,
+          y: "1.4vh",
           duration: 0.42,
           ease: 'power3.inOut',
         }, 0.06)
@@ -358,7 +360,7 @@ function CaseStudyModal({ project, isOpen, onClose }) {
 
     el.addEventListener('wheel', onWheel, { passive: true });
     return () => el.removeEventListener('wheel', onWheel);
-  }, [mounted]);
+  }, [mounted, project?.id]); // Re-bind on project change
 
   if (!mounted || !project || typeof document === 'undefined') return null;
 
@@ -384,7 +386,7 @@ function CaseStudyModal({ project, isOpen, onClose }) {
         <div
           ref={modalRef}
           className="modal-box"
-          style={{ opacity: 0, transform: 'scale(0.94) translateY(20px)' }}
+          style={{ opacity: 0, transform: 'scale(0.94) translateY(2vh)' }}
           role="dialog"
           aria-modal="true"
           aria-label={`Case study: ${project.title}`}
@@ -466,6 +468,7 @@ export default function Projects() {
   const headingRef  = useRef(null);
   const featuredRef = useRef(null);
   const gridRef     = useRef(null);
+  const { width }   = useWindowSize();
 
   const featured = PROJECTS[0];
   const grid     = PROJECTS.slice(1);
@@ -483,7 +486,7 @@ export default function Projects() {
 
     const ctx = gsap.context(() => {
       gsap.from([labelRef.current, headingRef.current].filter(Boolean), {
-        y: 28, opacity: 0, stagger: 0.12, duration: 1.0, ease: 'expo.out',
+        y: "2.8vh", opacity: 0, stagger: 0.12, duration: 1.0, ease: 'expo.out',
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top 74%',
@@ -491,7 +494,7 @@ export default function Projects() {
         },
       });
       gsap.from(featuredRef.current, {
-        y: 32, opacity: 0, duration: 1.2, ease: 'expo.out',
+        y: "3.2vh", opacity: 0, duration: 1.2, ease: 'expo.out',
         scrollTrigger: {
           trigger: featuredRef.current,
           start: 'top 82%',
@@ -500,7 +503,7 @@ export default function Projects() {
       });
       if (gridRef.current) {
         gsap.from(gridRef.current.children, {
-          y: 24, opacity: 0, stagger: 0.08, duration: 1.0, ease: 'expo.out',
+          y: "2.4vh", opacity: 0, stagger: 0.08, duration: 1.0, ease: 'expo.out',
           scrollTrigger: {
             trigger: gridRef.current,
             start: 'top 82%',
@@ -511,7 +514,7 @@ export default function Projects() {
     }, sectionRef.current);
 
     return () => ctx.revert();
-  }, []);
+  }, [width]); // Re-init on resize
 
   const isOpen       = activeId !== null;
   const modalProject = activeId

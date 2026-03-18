@@ -106,7 +106,7 @@ export default function Footer() {
               <p className="footer-wordmark" aria-label="Abdullah Aslam Portfolio">
                 Abdullah Aslam
               </p>
-              <p className="footer-descriptor">Flutter · React · Mobile</p>
+              <p className="footer-descriptor">Flutter · Mobile</p>
             </div>
 
             <div className="footer-social-col">
@@ -150,19 +150,9 @@ export default function Footer() {
             <p className="footer-nav-tagline">crafting apps with care</p>
           </div>
 
-          {/* BOTTOM: copyright + status + built-with */}
+          {/* BOTTOM: copyright */}
           <div className="footer-bottom">
             <p className="footer-copy">© {year} Abdullah Aslam. All rights reserved.</p>
-
-            <div className="footer-status" aria-label="Available for work">
-              <span className="status-dot" aria-hidden="true" />
-              Available for work
-            </div>
-
-            <p className="footer-built">
-              <span className="built-mono">// built with</span>{' '}Flutter love{' '}
-              <span className="built-mono">+ React</span>
-            </p>
           </div>
 
         </div>

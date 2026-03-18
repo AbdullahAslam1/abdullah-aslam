@@ -2,6 +2,28 @@
    LAYOUT UTILITIES
    ============================================================ */
 
+/* Global Responsive Media Scaling */
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.aspect-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* default aspect ratio */
+  overflow: hidden;
+}
+
+.aspect-wrapper > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .container {
   width: 100%;
   max-width: var(--max-w);
@@ -128,15 +150,35 @@
   font-size: var(--fs-base);
   color: var(--text-secondary);
   line-height: var(--lh-relaxed);
-  max-width: 560px;
+  max-width: clamp(20rem, 80vw, 35rem); /* Flexible max-width */
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .grid-3 { grid-template-columns: repeat(2, 1fr); }
-  .grid-4 { grid-template-columns: repeat(2, 1fr); }
-}
+/* ── Responsive ─────────────────────────────────────────────── */
 
-@media (max-width: 640px) {
+/* Mobile: 320px – 767px */
+@media (max-width: 767px) {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .section-heading { font-size: var(--fs-2xl); }
+}
+
+/* Tablet: 768px – 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .section-heading { font-size: var(--fs-3xl); }
+}
+
+/* Desktop: 1024px – 1439px */
+@media (min-width: 1024px) {
+  /* Default grid layout */
+}
+
+/* Large desktop: 1440px – 1919px */
+@media (min-width: 1440px) {
+  .container { max-width: 1320px; }
+}
+
+/* Ultra-wide: 1920px+ */
+@media (min-width: 1920px) {
+  .container { max-width: 1600px; }
+  :root { font-size: 110%; } /* Slight scale up for ultra-wide clarity */
 }

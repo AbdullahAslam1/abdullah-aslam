@@ -37,8 +37,8 @@
 }
 
 .blob--1 {
-  width: clamp(400px, 55vw, 800px);
-  height: clamp(400px, 55vw, 800px);
+  width: clamp(25rem, 55vw, 50rem);
+  height: clamp(25rem, 55vw, 50rem);
   /* Larger + softer gradient compensates for no blur */
   background: radial-gradient(circle,
     rgba(123, 159, 187, 0.10) 0%,
@@ -50,8 +50,8 @@
 }
 
 .blob--2 {
-  width: clamp(300px, 40vw, 600px);
-  height: clamp(300px, 40vw, 600px);
+  width: clamp(20rem, 40vw, 40rem);
+  height: clamp(20rem, 40vw, 40rem);
   background: radial-gradient(circle,
     rgba(110, 155, 155, 0.09) 0%,
     rgba(110, 155, 155, 0.03) 40%,
@@ -65,8 +65,8 @@
 .hero-grid {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 0.06rem, transparent 0.06rem);
+  background-size: 2.5rem 2.5rem;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
   opacity: 0;
   will-change: opacity;
@@ -88,8 +88,8 @@
 .hero-label::before {
   content: '';
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 0.5rem;
+  height: 0.5rem;
   background: var(--accent-slate);
   border-radius: 50%;
   margin-right: var(--sp-3);
@@ -121,7 +121,7 @@
 
 .word--accent {
   color: transparent;
-  -webkit-text-stroke: 1px rgba(123, 159, 187, 0.7);
+  -webkit-text-stroke: 0.06rem rgba(123, 159, 187, 0.7);
   position: relative;
 }
 
@@ -142,7 +142,7 @@
   color: var(--text-secondary);
   font-weight: var(--fw-regular);
   line-height: var(--lh-relaxed);
-  max-width: 560px;
+  max-width: clamp(20rem, 80vw, 35rem);
   margin-bottom: var(--sp-3);
   opacity: 0;
   transform: translateY(20px);
@@ -186,7 +186,7 @@
   gap: var(--sp-3);
   padding: var(--sp-4) var(--sp-8);
   background: rgba(123, 159, 187, 0.10);  /* solid tint — no backdrop-filter */
-  border: 1px solid var(--glass-border-md);
+  border: 0.06rem solid var(--glass-border-md);
   border-radius: var(--r-full);
   color: var(--text-primary);
   font-size: var(--fs-sm);
@@ -206,7 +206,7 @@
 .btn-primary svg {
   transition: transform var(--dur-base) var(--ease-spring);
 }
-.btn-primary:hover svg { transform: translateX(3px); }
+.btn-primary:hover svg { transform: translateX(0.2rem); }
 
 .btn-ghost {
   display: inline-flex;
@@ -248,7 +248,7 @@
 
 .hero-stats .stat-item + .stat-item {
   padding-left: var(--sp-10);
-  border-left: 1px solid var(--glass-border);
+  border-left: 0.06rem solid var(--glass-border);
 }
 
 /* ── Scroll indicator ───────────────────────────────────────── */
@@ -265,8 +265,8 @@
 }
 
 .scroll-line {
-  width: 1px;
-  height: 44px;
+  width: 0.06rem;
+  height: 2.75rem;
   background: linear-gradient(to bottom, transparent, var(--accent-slate));
   animation: scrollBounce 2.2s ease-in-out infinite;
 }
@@ -283,15 +283,27 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .hero-heading { font-size: var(--fs-3xl); }
-  .hero-stats   { gap: var(--sp-6); }
-  .hero-stats .stat-item + .stat-item { padding-left: var(--sp-6); }
+
+/* Mobile: 320px – 767px */
+@media (max-width: 767px) {
+  .hero-inner { padding-top: var(--sp-12); padding-bottom: var(--sp-12); }
+  .hero-heading { font-size: var(--fs-3xl); margin-bottom: var(--sp-4); }
+  .hero-subtitle { margin-bottom: var(--sp-6); }
+  .hero-roles { margin-bottom: var(--sp-10); }
+  .hero-ctas { gap: var(--sp-3); margin-bottom: var(--sp-12); }
+  .hero-stats   { gap: var(--sp-6); width: 100%; justify-content: space-between; }
+  .hero-stats .stat-item + .stat-item { padding-left: var(--sp-4); }
   .scroll-indicator { display: none; }
+  .hero-ctas { flex-direction: column; align-items: stretch; width: 100%; }
+  .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
 }
 
-@media (max-width: 480px) {
-  .hero-heading { font-size: var(--fs-2xl); }
-  .hero-ctas { flex-direction: column; align-items: flex-start; }
-  .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+/* Tablet: 768px – 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-heading { font-size: var(--fs-4xl); }
+}
+
+/* Largescreen optimizations */
+@media (min-width: 1920px) {
+  .hero-inner { padding-top: var(--sp-32); }
 }

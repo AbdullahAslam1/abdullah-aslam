@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap, ScrollTrigger } from '../../utils/gsap-setup.js';
+import useWindowSize from '../../hooks/useWindowSize.js';
 import './Hero.css';
 
 
@@ -22,6 +23,9 @@ export default function Hero() {
   const blob2Ref    = useRef(null);
   const gridRef     = useRef(null);
   const typeRef     = useRef(null);
+  const { width }   = useWindowSize();
+  const isMobile    = width < 768;
+  const [hasEntered, setHasEntered] = useState(false);
 
   // ── Typewriter ────────────────────────────────────────────
   useEffect(() => {
@@ -59,144 +63,132 @@ export default function Hero() {
       
       const tl = gsap.timeline({ 
         defaults: { ease: 'expo.out' },
-        delay: 0.2 
+        delay: hasEntered ? 0 : 0.2 
       });
 
-      // Background elements fade in gracefully
-      tl.to([blob1Ref.current, blob2Ref.current], {
-        opacity: 1, duration: 2.5, stagger: 0.3, force3D: true
-      }, 0);
+      // Background elements
+      if (!hasEntered) {
+        tl.to([blob1Ref.current, blob2Ref.current], {
+          opacity: 1, duration: 2.5, stagger: 0.3
+        }, 0);
+        tl.to(gridRef.current, { opacity: 1, duration: 1.5 }, 0.3);
+      } else {
+        gsap.set([blob1Ref.current, blob2Ref.current, gridRef.current], { opacity: 1 });
+      }
 
-      tl.to(gridRef.current, { 
-        opacity: 1, duration: 1.5 
-      }, 0.3);
-
-      // Heading words - buttery cascade
+      // Heading words
       if (words?.length) {
-        tl.to(words, {
-          y: 0,
-          opacity: 1,
-          stagger: 0.06,
-          duration: 1.2,
-          ease: 'expo.out',
-          force3D: true
-        }, 0.4);
+        if (!hasEntered) {
+          tl.to(words, {
+            y: 0, opacity: 1, stagger: 0.06, duration: 1.2, ease: 'expo.out'
+          }, 0.4);
+        } else {
+          gsap.set(words, { y: 0, opacity: 1 });
+        }
       }
 
       // Remaining elements
-      tl.to(subtitleRef.current, { 
-        y: 0, opacity: 1, duration: 1.0 
-      }, 0.8);
+      if (!hasEntered) {
+        tl.to(subtitleRef.current, { y: 0, opacity: 1, duration: 1.0 }, 0.8);
+        tl.to(rolesRef.current, { y: 0, opacity: 1, duration: 1.0 }, 0.9);
+        tl.to(ctaRef.current, { y: 0, opacity: 1, duration: 1.0 }, 1.0);
+        tl.fromTo(scrollRef.current, 
+          { opacity: 0, y: "-2vh" },
+          { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out', onComplete: () => setHasEntered(true) }, 
+          1.5
+        );
+      } else {
+        gsap.set([subtitleRef.current, rolesRef.current, ctaRef.current, scrollRef.current], { y: 0, opacity: 1 });
+      }
 
-      tl.to(rolesRef.current, { 
-        y: 0, opacity: 1, duration: 1.0 
-      }, 0.9);
-
-      tl.to(ctaRef.current, { 
-        y: 0, opacity: 1, duration: 1.0 
-      }, 1.0);
-
-      tl.fromTo(scrollRef.current, 
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out' }, 
-        1.5
-      );
-
-      // ── Scroll Parallax — Optimized for fluid motion ──
+      // ── Scroll Parallax — Using relative units ──
       gsap.to(blob1Ref.current, {
-        y: 120,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 1.5, // slightly faster scrub for responsiveness
-          force3D: true
-        },
-      });
-
-      gsap.to(blob2Ref.current, {
-        y: -100,
+        y: "15vh",
         ease: 'none',
         scrollTrigger: {
           trigger: section,
           start: 'top top',
           end: 'bottom top',
           scrub: 1.5,
-          force3D: true
+          invalidateOnRefresh: true,
+        },
+      });
+
+      gsap.to(blob2Ref.current, {
+        y: "-12vh",
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1.5,
+          invalidateOnRefresh: true,
         },
       });
 
       gsap.to(headingRef.current, {
-        y: 60,
+        y: "8vh",
         ease: 'none',
         scrollTrigger: {
           trigger: section,
           start: 'top top',
           end: 'bottom top',
           scrub: 1.2,
-          force3D: true
+          invalidateOnRefresh: true,
         },
       });
 
-      // Ambient drift on x-axis only, so it does not fight with y-axis scroll parallax.
+      // Ambient drift
       gsap.to(blob1Ref.current, {
-        x: 24,
-        duration: 18,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
+        x: "2vw", duration: 18, repeat: -1, yoyo: true, ease: 'sine.inOut',
       });
-
       gsap.to(blob2Ref.current, {
-        x: -20,
-        duration: 22,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
+        x: "-1.5vw", duration: 22, repeat: -1, yoyo: true, ease: 'sine.inOut',
       });
 
-      // ── Mouse Influence — Buttery Tilt ──
-      const xTo = gsap.quickTo(headingRef.current, "rotateY", { duration: 1.2, ease: "power3.out" });
-      const yTo = gsap.quickTo(headingRef.current, "rotateX", { duration: 1.2, ease: "power3.out" });
+      // ── Mouse Influence — Only on Desktop ──
+      if (width >= 1024) {
+        // Use set initially to avoid quickTo reset warning
+        gsap.set(headingRef.current, { transformPerspective: 1000 });
+        
+        const xTo = gsap.quickTo(headingRef.current, "rotationY", { duration: 1.2, ease: "power3.out" });
+        const yTo = gsap.quickTo(headingRef.current, "rotationX", { duration: 1.2, ease: "power3.out" });
 
-      const onMouseMove = (e) => {
-        const { clientX, clientY } = e;
-        const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-        const xPercent = (clientX - cx) / cx;
-        const yPercent = (clientY - cy) / cy;
+        const onMouseMove = (e) => {
+          const { clientX, clientY } = e;
+          const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+          const xPercent = (clientX - cx) / cx;
+          const yPercent = (clientY - cy) / cy;
+          xTo(xPercent * -3.5);
+          yTo(yPercent * 3.5);
+        };
 
-        xTo(xPercent * -3.5);
-        yTo(yPercent * 3.5);
-      };
+        const onMouseEnter = () => {
+          tiltResetCall?.kill();
+          headingRef.current?.classList.add('hero-heading--tilt');
+        };
+        const onMouseLeave = () => {
+          xTo(0); yTo(0);
+          tiltResetCall?.kill();
+          tiltResetCall = gsap.delayedCall(0.8, () => {
+            headingRef.current?.classList.remove('hero-heading--tilt');
+          });
+        };
 
-      const onMouseEnter = () => {
-        tiltResetCall?.kill();
-        headingRef.current?.classList.add('hero-heading--tilt');
-      };
-      const onMouseLeave = () => {
-        xTo(0);
-        yTo(0);
-        tiltResetCall?.kill();
-        tiltResetCall = gsap.delayedCall(0.8, () => {
-          headingRef.current?.classList.remove('hero-heading--tilt');
-        });
-      };
+        section.addEventListener('mouseenter', onMouseEnter);
+        section.addEventListener('mousemove', onMouseMove, { passive: true });
+        section.addEventListener('mouseleave', onMouseLeave);
 
-      section.addEventListener('mouseenter', onMouseEnter);
-      section.addEventListener('mousemove', onMouseMove, { passive: true });
-      section.addEventListener('mouseleave', onMouseLeave);
-
-      return () => {
-        tiltResetCall?.kill();
-        section.removeEventListener('mouseenter', onMouseEnter);
-        section.removeEventListener('mousemove', onMouseMove);
-        section.removeEventListener('mouseleave', onMouseLeave);
-      };
+        return () => {
+          section.removeEventListener('mouseenter', onMouseEnter);
+          section.removeEventListener('mousemove', onMouseMove);
+          section.removeEventListener('mouseleave', onMouseLeave);
+        };
+      }
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [width, hasEntered]); 
 
   return (
     <section id="hero" ref={sectionRef} className="hero">
@@ -217,7 +209,10 @@ export default function Hero() {
         </h1>
 
         <p ref={subtitleRef} className="hero-subtitle">
-          Building pixel-perfect, high-performance mobile experiences with
+          {isMobile 
+            ? "Building high-performance mobile experiences."
+            : "Building pixel-perfect, high-performance mobile experiences with"
+          }
         </p>
 
         <div ref={rolesRef} className="hero-roles">

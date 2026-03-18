@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, memo } from 'react';
 import { gsap, ScrollTrigger } from '../../utils/gsap-setup.js';
+import useWindowSize from '../../hooks/useWindowSize.js';
 import './Skills.css';
 
 const CATEGORIES = [
@@ -107,6 +108,7 @@ export default function Skills() {
   const tabsRef    = useRef(null);
   const panelRef   = useRef(null);
   const orbsRef    = useRef(null);
+  const { width }  = useWindowSize();
 
   const active = CATEGORIES.find((c) => c.id === activeId);
 
@@ -130,26 +132,25 @@ export default function Skills() {
         defaults: { ease: 'expo.out', force3D: true }
       });
 
-      // use fromTo so we don't depend on CSS initial states (safer for React)
       tl.fromTo([orbsRef.current, labelRef.current, headingRef.current], 
-        { y: 20, opacity: 0 },
+        { y: "2vh", opacity: 0 },
         { y: 0, opacity: 1, stagger: 0.1, duration: 1.2 }
       );
 
       tl.fromTo(tabsRef.current, 
-        { x: -20, opacity: 0 },
+        { x: "-2vw", opacity: 0 },
         { x: 0, opacity: 1, duration: 1.0 }, 
         0.3
       );
 
       tl.fromTo(panelRef.current, 
-        { x: 20, opacity: 0 },
+        { x: "2vw", opacity: 0 },
         { x: 0, opacity: 1, duration: 1.2 }, 
         0.4
       );
 
       tl.fromTo('.skill-chip', 
-        { y: 12, opacity: 0 },
+        { y: "1.2vh", opacity: 0 },
         { y: 0, opacity: 1, stagger: 0.02, duration: 0.8, ease: 'power3.out' }, 
         0.6
       );
@@ -157,7 +158,7 @@ export default function Skills() {
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [width]); // Re-init on resize
 
   function switchTab(id) {
     if (id === activeId || animating) return;
@@ -175,7 +176,7 @@ export default function Skills() {
     // "Liquid" slide transition
     gsap.to(panel, {
       opacity: 0,
-      x: -12,
+      x: "-1.2vw",
       duration: 0.25,
       ease: 'power2.in',
       onComplete: () => {
@@ -183,7 +184,7 @@ export default function Skills() {
         
         requestAnimationFrame(() => {
           gsap.fromTo(panel, 
-            { opacity: 0, x: 12 },
+            { opacity: 0, x: "1.2vw" },
             { 
               opacity: 1, 
               x: 0, 
@@ -194,7 +195,7 @@ export default function Skills() {
           );
           
           gsap.fromTo(panel.querySelectorAll('.skill-chip'), 
-            { opacity: 0, y: 8 },
+            { opacity: 0, y: "0.8vh" },
             { 
               opacity: 1, 
               y: 0, 

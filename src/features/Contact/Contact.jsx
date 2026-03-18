@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { gsap } from '../../utils/gsap-setup.js';
+import useWindowSize from '../../hooks/useWindowSize.js';
 import './Contact.css';
 
 function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
@@ -103,6 +104,7 @@ export default function Contact() {
   const sectionRef = useRef(null);
   const leftRef    = useRef(null);
   const rightRef   = useRef(null);
+  const { width }   = useWindowSize();
 
   // ── Unified Performance Entrance ──────────────────────────
   useEffect(() => {
@@ -119,7 +121,8 @@ export default function Contact() {
         scrollTrigger: {
           trigger: section,
           start: 'top 80%',
-          once: true // Pro standard: kill trigger on finish
+          once: true,
+          invalidateOnRefresh: true,
         },
         defaults: { ease: 'expo.out', force3D: true }
       });
@@ -134,12 +137,12 @@ export default function Contact() {
         x: 0,
         opacity: 1,
         duration: 1.4
-      }, 0.2); // slight overlap
+      }, 0.2);
 
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [width]); // Re-init on resize
 
   return (
     <section id="contact" ref={sectionRef} className="contact section">

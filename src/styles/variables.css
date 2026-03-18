@@ -154,11 +154,19 @@
   --sp-32:  8rem;
 
   /* ── LAYOUT ─────────────────────────────────────────────── */
-  --max-w:          1320px;
-  --max-w-text:     680px;
+  --max-w:          82.5rem;    /* 1320px equivalent, but scaleable */
+  --max-w-text:     42.5rem;    /* 680px equivalent */
   --container-px:   clamp(1.25rem, 5vw, 3rem);
-  --nav-h:          68px;
+  --nav-h:          clamp(4rem, 8vh, 4.5rem); /* Flexible nav height */
   --section-py:     clamp(3rem, 9vw, 6rem);
+
+  /* ── BREAKPOINTS ────────────────────────────────────────── */
+  --bp-xs: 320px;
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1440px;
+  --bp-2xl:1920px;
 
   /* ── BORDER RADIUS ───────────────────────────────────────── */
   --r-sm:   4px;

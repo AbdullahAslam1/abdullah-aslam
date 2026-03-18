@@ -69,8 +69,8 @@
 }
 
 .trait-dot {
-  width: 5px;
-  height: 5px;
+  width: 0.35rem;
+  height: 0.35rem;
   border-radius: 50%;
   background: var(--accent-slate);
   opacity: 0.6;
@@ -161,20 +161,20 @@
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  width: 128px;
-  height: 128px;
+  width: 8rem;
+  height: 8rem;
   border-radius: 50%;
-  border: 1px solid rgba(123, 159, 187, 0.15);
+  border: 0.06rem solid rgba(123, 159, 187, 0.15);
   pointer-events: none;
 }
 
 .avatar-img {
-  width: 104px;
-  height: 104px;
+  width: 6.5rem;
+  height: 6.5rem;
   border-radius: 50%;
   object-fit: cover;
   object-position: center top;
-  border: 1px solid var(--glass-border-md);
+  border: 0.06rem solid var(--glass-border-md);
   display: block;
 }
 
@@ -194,8 +194,8 @@
 }
 
 .status-dot {
-  width: 6px;
-  height: 6px;
+  width: 0.4rem;
+  height: 0.4rem;
   border-radius: 50%;
   background: #6e9b7e;
   animation: softPulse 2s ease-in-out infinite;
@@ -296,7 +296,7 @@
 }
 
 .badge-icon {
-  font-size: 10px;
+  font-size: 0.65rem;
   color: var(--accent-slate);
   opacity: 0.7;
   font-style: normal;
@@ -317,18 +317,32 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
+  .about-container {
+    gap: var(--sp-10);
+  }
+
+  .about-left {
+    gap: var(--sp-6);
+  }
+
+  .tech-stack {
+    display: none;
+  }
+
   .profile-card {
     padding: var(--sp-6);
   }
 
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .about-ctas {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .about-ctas .btn-primary, .about-ctas .btn-ghost {
+    width: 100%;
+    justify-content: center;
   }
 }
 

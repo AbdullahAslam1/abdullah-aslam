@@ -1,5 +1,6 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { gsap, ScrollTrigger } from '../../utils/gsap-setup.js';
+import useWindowSize from '../../hooks/useWindowSize.js';
 import './About.css';
 
 
@@ -40,7 +41,9 @@ export default function About() {
   const cardRef    = useRef(null);
   const statsRef   = useRef(null);
   const techRef    = useRef(null);
-  const countRefs  = useRef([]);
+  const countRefs  = useRef(null);
+  const { width }  = useWindowSize();
+  const isMobile   = width < 768;
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -78,16 +81,18 @@ export default function About() {
       );
 
       // Integrated Stats count-up (starts slightly after card entrance)
-      countRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const obj = { val: 0 };
-        tl.to(obj, {
-          val: STATS[i].value,
-          duration: 2.5,
-          ease: 'power4.out',
-          onUpdate: () => { el.textContent = Math.round(obj.val); },
-        }, 0.4); // overlap with main entrance
-      });
+      if (countRefs.current) {
+        Object.values(countRefs.current).forEach((el, i) => {
+          if (!el) return;
+          const obj = { val: 0 };
+          tl.to(obj, {
+            val: STATS[i].value,
+            duration: 2.5,
+            ease: 'power4.out',
+            onUpdate: () => { el.textContent = Math.round(obj.val); },
+          }, 0.4); // overlap with main entrance
+        });
+      }
 
       // Tech badges - smoother stagger
       const badges = tech.querySelectorAll('.tech-badge');
@@ -164,7 +169,7 @@ export default function About() {
       card.removeEventListener('mousemove',  onMouseMove);
       card.removeEventListener('mouseleave', onMouseLeave);
     };
-  }, []);
+  }, [width]); // Re-init on resize
 
   return (
     <section id="about" ref={sectionRef} className="about section">
@@ -179,18 +184,29 @@ export default function About() {
           </h2>
 
           <div ref={textRef} className="about-body">
-            <p>
-              I build high-performance, pixel-perfect Flutter applications
-              with clean, maintainable architecture at their core. Specialising
-              in <em>Riverpod</em>, and <em>Clean Architecture</em>,
-              I design systems that scale without accumulating technical debt.
-            </p>
-            <p>
-              My workflow spans the full mobile stack from crafting smooth
-              animations to wiring up Firebase, Supabase, and custom REST
-              APIs. I work with clients globally
-              and am open to remote opportunities worldwide.
-            </p>
+            {isMobile ? (
+              <p>
+                I build high-performance Flutter apps with clean, scalable architecture. 
+                I specialise in Riverpod and building systems that scale smoothly. 
+                From polished UI to backend integrations like Firebase and APIs, I handle the full flow.
+                Open to remote opportunities worldwide.
+              </p>
+            ) : (
+              <>
+                <p>
+                  I build high-performance, pixel-perfect Flutter applications
+                  with clean, maintainable architecture at their core. Specialising
+                  in <em>Riverpod</em>, and <em>Clean Architecture</em>,
+                  I design systems that scale without accumulating technical debt.
+                </p>
+                <p>
+                  My workflow spans the full mobile stack from crafting smooth
+                  animations to wiring up Firebase, Supabase, and custom REST
+                  APIs. I work with clients globally
+                  and am open to remote opportunities worldwide.
+                </p>
+              </>
+            )}
           </div>
 
           <ul ref={traitsRef} className="about-traits">
@@ -232,7 +248,10 @@ export default function About() {
               {STATS.map(({ suffix, label }, i) => (
                 <div key={label} className="stat-cell">
                   <div className="stat-number">
-                    <span ref={(el) => (countRefs.current[i] = el)}>0</span>
+                    <span ref={(el) => {
+                      if (!countRefs.current) countRefs.current = {};
+                      countRefs.current[i] = el;
+                    }}>0</span>
                     <span className="stat-suffix">{suffix}</span>
                   </div>
                   <div className="stat-desc">{label}</div>
