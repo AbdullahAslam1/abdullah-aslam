@@ -1,0 +1,46 @@
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  will-change: transform, width, height;
+  border-radius: 50%;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--text-primary);
+  /* Smooth movement is handled in JS via a lerped position */
+  transition: opacity 0.2s;
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: transparent;
+  /* width/height transition for hover expansion only */
+  transition: opacity 0.2s, width 0.3s cubic-bezier(0.25,1,0.5,1), height 0.3s cubic-bezier(0.25,1,0.5,1);
+}
+
+/* CSS-only click ripple — no GSAP */
+.cursor-ring--click {
+  animation: cursorRipple 0.4s ease-out forwards;
+}
+
+@keyframes cursorRipple {
+  from { transform: translate(var(--cx, 0), var(--cy, 0)) translate(-50%, -50%) scale(1); opacity: 0.5; }
+  to   { transform: translate(var(--cx, 0), var(--cy, 0)) translate(-50%, -50%) scale(1.8); opacity: 0; }
+}
+
+/* Hide native cursor on precise pointer devices */
+@media (pointer: fine) {
+  body, a, button, [data-cursor="magnetic"] { cursor: none; }
+}
+
+@media (pointer: coarse) {
+  .cursor-dot, .cursor-ring { display: none; }
+}

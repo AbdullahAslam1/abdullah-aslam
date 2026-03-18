@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0b0d14"/>
+  <rect x="0" y="0" width="1200" height="630" fill="none" stroke="#1e2436" stroke-width="2"/>
+  <!-- Subtle grid -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <!-- Blob accent -->
+  <ellipse cx="200" cy="200" rx="300" ry="300" fill="rgba(123,159,187,0.06)"/>
+  <ellipse cx="1000" cy="430" rx="250" ry="250" fill="rgba(110,155,155,0.05)"/>
+  <!-- Logo -->
+  <text x="100" y="200" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="rgba(123,159,187,0.7)">&lt;</text>
+  <text x="120" y="200" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="#dde3ec">AB</text>
+  <text x="158" y="200" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="rgba(123,159,187,0.7)">/&gt;</text>
+  <!-- Main text -->
+  <text x="100" y="310" font-family="system-ui, sans-serif" font-size="72" font-weight="800" fill="#dde3ec">Abdullah Aslam</text>
+  <text x="100" y="400" font-family="system-ui, sans-serif" font-size="32" font-weight="400" fill="#8892a4">Flutter Developer · Karachi, Pakistan</text>
+  <!-- Available badge -->
+  <rect x="100" y="450" width="200" height="40" rx="20" fill="rgba(123,159,187,0.1)" stroke="rgba(123,159,187,0.2)" stroke-width="1"/>
+  <circle cx="126" cy="470" r="5" fill="#7b9fbb"/>
+  <text x="142" y="476" font-family="system-ui, sans-serif" font-size="16" fill="#a8b4c0">Available for work</text>
+  <!-- Domain -->
+  <text x="100" y="570" font-family="system-ui, sans-serif" font-size="20" fill="rgba(255,255,255,0.2)">yourname.dev</text>
+</svg>

@@ -1,0 +1,53 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  theme: {
+    extend: {
+      colors: {
+        'bg-void':     '#07080d',
+        'bg-base':     '#0b0d14',
+        'bg-raised':   '#10131d',
+        'bg-overlay':  '#161a27',
+        'bg-border':   '#1e2436',
+        'accent-slate':'#7b9fbb',
+        'accent-dust': '#6e9b9b',
+        'accent-stone':'#8e8ea0',
+        'accent-fog':  '#a8b4c0',
+        'accent-warm': '#b8a89a',
+        'text-primary':'#dde3ec',
+        'text-secondary':'#8892a4',
+        'text-tertiary':'#4f5769',
+        'text-accent': '#a8bfd4',
+      },
+      fontFamily: {
+        display: ['Syne', 'Helvetica Neue', 'sans-serif'],
+        body:    ['DM Sans', '-apple-system', 'sans-serif'],
+        mono:    ['JetBrains Mono', 'Fira Code', 'monospace'],
+      },
+      borderRadius: {
+        'sm':   '4px',
+        'md':   '8px',
+        'lg':   '14px',
+        'xl':   '20px',
+        '2xl':  '28px',
+        'full': '9999px',
+      },
+      spacing: {
+        '1':  '0.25rem',
+        '2':  '0.5rem',
+        '3':  '0.75rem',
+        '4':  '1rem',
+        '5':  '1.25rem',
+        '6':  '1.5rem',
+        '8':  '2rem',
+        '10': '2.5rem',
+        '12': '3rem',
+        '16': '4rem',
+        '20': '5rem',
+        '24': '6rem',
+        '32': '8rem',
+      },
+    },
+  },
+  plugins: [],
+};

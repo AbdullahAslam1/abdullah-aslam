@@ -1,0 +1,186 @@
+---
+// ── Astro page — runs at build time (server-side)
+// Static HTML shell + island mounting for every interactive component
+import '../styles/variables.css';
+import '../styles/reset.css';
+import '../styles/layout.css';
+import '../styles/animations.css';
+
+import Header   from '../components/Header/Header.jsx';
+import Cursor   from '../components/Cursor/Cursor.jsx';
+import Hero     from '../features/Hero/Hero.jsx';
+import About    from '../features/About/About.jsx';
+import Skills   from '../features/Skills/Skills.jsx';
+import Projects from '../features/Projects/Projects.jsx';
+import Contact  from '../features/Contact/Contact.jsx';
+import Footer   from '../components/Footer/Footer.jsx';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0b0d14" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Abdullah Aslam" />
+
+    <!-- Primary SEO -->
+    <title>Abdullah Aslam — Flutter Developer in Karachi, Pakistan</title>
+    <meta name="description" content="Flutter developer based in Karachi, Pakistan — building pixel-perfect, high-performance mobile apps with clean architecture. Available for freelance and full-time remote work." />
+    <link rel="canonical" href="https://yourname.dev" />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://yourname.dev" />
+    <meta property="og:title"       content="Abdullah Aslam — Flutter Developer" />
+    <meta property="og:description" content="Flutter developer based in Karachi, Pakistan — building pixel-perfect, high-performance mobile apps." />
+    <meta property="og:image"       content="https://yourname.dev/og-image.webp" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="Abdullah Aslam — Flutter Developer" />
+    <meta name="twitter:description" content="Flutter developer based in Karachi, Pakistan — building pixel-perfect, high-performance mobile apps." />
+    <meta name="twitter:image"       content="https://yourname.dev/og-image.webp" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Fonts: self-hosted via /public/fonts/ — zero external requests, font-display:swap in variables.css -->
+    <link rel="preload" href="/fonts/syne-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/syne-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Structured data: Person + WebSite schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://yourname.dev/#person",
+          "name": "Abdullah Aslam",
+          "jobTitle": "Flutter Developer",
+          "description": "Flutter developer based in Karachi, Pakistan building pixel-perfect, high-performance mobile apps.",
+          "url": "https://yourname.dev",
+          "email": "h.m.abdullah709@gmail.com",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Karachi",
+            "addressCountry": "PK"
+          },
+          "sameAs": [
+            "https://github.com/AbdullahAslam1",
+            "https://www.linkedin.com/in/abdullahaslam1"
+          ],
+          "knowsAbout": ["Flutter", "Dart", "Firebase", "Supabase", "Clean Architecture", "Riverpod", "BLoC", "Mobile App Development"]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://yourname.dev/#website",
+          "url": "https://yourname.dev",
+          "name": "Abdullah Aslam — Flutter Developer",
+          "description": "Portfolio of Abdullah Aslam, Flutter developer based in Karachi Pakistan.",
+          "author": { "@id": "https://yourname.dev/#person" }
+        }
+      ]
+    }
+    </script>
+  </head>
+
+  <body>
+    <noscript>
+      <style>
+        astro-island { display: contents !important; }
+        .cursor-dot, .cursor-ring { display: none !important; }
+      </style>
+    </noscript>
+
+    <!-- Cursor: client:load — needs JS from the first frame -->
+    <Cursor client:load />
+
+    <!-- Header: client:load — scroll detection + nav links need immediate JS -->
+    <Header client:load />
+
+    <main>
+      <!-- Hero: client:load — critical above-the-fold content needs immediate hydration -->
+      <Hero     client:load />
+      <About    client:load />
+      <Skills   client:load />
+      <Projects client:load />
+      <Contact  client:load />
+    </main>
+
+    <!-- Footer: client:load — consistent 'buttery' hydration -->
+    <Footer client:load />
+  </body>
+</html>
+
+<script>
+  // ── Global setup: runs once on page load, before any island hydrates ──
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import Lenis from '@studio-freight/lenis';
+
+  // Register GSAP plugins once globally
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.defaults({ overwrite: 'auto' });
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  // Initialise Lenis smooth scroll
+  const lenis = new Lenis({
+    duration:        1.2,
+    easing:          (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Expo out easing
+    orientation:     'vertical',
+    smoothWheel:     true,
+    wheelMultiplier: 1.1,
+    touchMultiplier: 2.0,
+    lerp:            0.08,
+    infinite:        false,
+  });
+
+  // Store on window so React islands can access via getLenis()
+  window.__lenis = lenis;
+
+  // Keep ScrollTrigger in sync with Lenis scroll position
+  lenis.on('scroll', ScrollTrigger.update);
+
+  // Single RAF function — stored so cleanup works correctly
+  const rafFn = (time) => lenis.raf(time * 1000);
+  gsap.ticker.add(rafFn);
+  gsap.ticker.lagSmoothing(1000, 16);
+
+  // Refresh ScrollTrigger after full page load so all island layouts are measured correctly
+  window.addEventListener('load', () => {
+    setTimeout(() => ScrollTrigger.refresh(), 120);
+  }, { once: true });
+
+  // Also refresh on window resize (debounced)
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
+  }, { passive: true });
+
+  // Smoothly handle all in-page hash navigation via Lenis
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const href = link.getAttribute('href');
+    if (!href || href === '#') return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    e.preventDefault();
+    lenis.scrollTo(target, {
+      offset: -68,
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
+  });
+</script>
