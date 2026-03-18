@@ -14,6 +14,9 @@ import Skills   from '../features/Skills/Skills.jsx';
 import Projects from '../features/Projects/Projects.jsx';
 import Contact  from '../features/Contact/Contact.jsx';
 import Footer   from '../components/Footer/Footer.jsx';
+
+const SITE_URL = 'https://abdullahaslam.me';
+const OG_IMAGE_URL = `${SITE_URL}/og-image.webp`;
 ---
 
 <!DOCTYPE html>
@@ -24,26 +27,33 @@ import Footer   from '../components/Footer/Footer.jsx';
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#0b0d14" />
     <meta name="color-scheme" content="dark" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="author" content="Abdullah Aslam" />
 
     <!-- Primary SEO -->
     <title>Abdullah Aslam — Flutter Developer in Karachi, Pakistan</title>
     <meta name="description" content="Flutter developer based in Karachi, Pakistan — building pixel-perfect, high-performance mobile apps with clean architecture. Available for freelance and full-time remote work." />
-    <link rel="canonical" href="https://yourname.dev" />
+    <link rel="canonical" href={SITE_URL} />
+    <link rel="alternate" hrefLang="en" href={SITE_URL} />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
     <!-- Open Graph -->
     <meta property="og:type"        content="website" />
-    <meta property="og:url"         content="https://yourname.dev" />
+    <meta property="og:url"         content={SITE_URL} />
+    <meta property="og:site_name"   content="Abdullah Aslam" />
+    <meta property="og:locale"      content="en_US" />
     <meta property="og:title"       content="Abdullah Aslam — Flutter Developer" />
     <meta property="og:description" content="Flutter developer based in Karachi, Pakistan — building pixel-perfect, high-performance mobile apps." />
-    <meta property="og:image"       content="https://yourname.dev/og-image.webp" />
+    <meta property="og:image"       content={OG_IMAGE_URL} />
+    <meta property="og:image:alt"   content="Abdullah Aslam portfolio preview" />
 
     <!-- Twitter -->
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content="Abdullah Aslam — Flutter Developer" />
     <meta name="twitter:description" content="Flutter developer based in Karachi, Pakistan — building pixel-perfect, high-performance mobile apps." />
-    <meta name="twitter:image"       content="https://yourname.dev/og-image.webp" />
+    <meta name="twitter:image"       content={OG_IMAGE_URL} />
+    <meta name="twitter:image:alt"   content="Abdullah Aslam portfolio preview" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -60,11 +70,11 @@ import Footer   from '../components/Footer/Footer.jsx';
       "@graph": [
         {
           "@type": "Person",
-          "@id": "https://yourname.dev/#person",
+          "@id": "https://abdullahaslam.me/#person",
           "name": "Abdullah Aslam",
           "jobTitle": "Flutter Developer",
           "description": "Flutter developer based in Karachi, Pakistan building pixel-perfect, high-performance mobile apps.",
-          "url": "https://yourname.dev",
+          "url": "https://abdullahaslam.me",
           "email": "h.m.abdullah709@gmail.com",
           "address": {
             "@type": "PostalAddress",
@@ -79,11 +89,11 @@ import Footer   from '../components/Footer/Footer.jsx';
         },
         {
           "@type": "WebSite",
-          "@id": "https://yourname.dev/#website",
-          "url": "https://yourname.dev",
+          "@id": "https://abdullahaslam.me/#website",
+          "url": "https://abdullahaslam.me",
           "name": "Abdullah Aslam — Flutter Developer",
           "description": "Portfolio of Abdullah Aslam, Flutter developer based in Karachi Pakistan.",
-          "author": { "@id": "https://yourname.dev/#person" }
+          "author": { "@id": "https://abdullahaslam.me/#person" }
         }
       ]
     }
@@ -98,8 +108,8 @@ import Footer   from '../components/Footer/Footer.jsx';
       </style>
     </noscript>
 
-    <!-- Cursor: client:load — needs JS from the first frame -->
-    <Cursor client:load />
+    <!-- Cursor is decorative; hydrate when main thread is less busy -->
+    <Cursor client:idle />
 
     <!-- Header: client:load — scroll detection + nav links need immediate JS -->
     <Header client:load />
@@ -107,14 +117,14 @@ import Footer   from '../components/Footer/Footer.jsx';
     <main>
       <!-- Hero: client:load — critical above-the-fold content needs immediate hydration -->
       <Hero     client:load />
-      <About    client:load />
-      <Skills   client:load />
-      <Projects client:load />
-      <Contact  client:load />
+      <About    client:visible />
+      <Skills   client:visible />
+      <Projects client:visible />
+      <Contact  client:visible />
     </main>
 
-    <!-- Footer: client:load — consistent 'buttery' hydration -->
-    <Footer client:load />
+    <!-- Footer is below the fold on most viewports -->
+    <Footer client:visible />
   </body>
 </html>
 

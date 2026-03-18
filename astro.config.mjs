@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://yourname.dev',
+  site: 'https://abdullahaslam.me',
   output: 'static',
   integrations: [
     react(),

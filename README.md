@@ -39,14 +39,15 @@ Important: first time setup may require confirming the FormSubmit activation ema
 
 ## Pre-deploy checklist (remaining)
 
-1. Set real production domain everywhere:
-   - astro.config.mjs (site)
-   - src/pages/index.astro (canonical, OG URL/image URLs, JSON-LD IDs)
+1. Production domain configured as https://abdullahaslam.me in:
+  - astro.config.mjs (site)
+  - src/pages/index.astro (canonical, OG URL/image URLs, JSON-LD IDs)
+  - public/robots.txt (sitemap URL)
 2. Add resume file at public/resume.pdf (header button currently points there)
 3. Replace About avatar placeholder with a real image in src/features/About/About.jsx
 4. Replace project repo links with per-project GitHub URLs in src/features/Projects/projects.data.jsx (currently all point to profile)
 5. Replace public/og-image.svg with final social preview asset (1200x630 recommended)
-6. Ensure robots/sitemap domain matches final production domain
+6. Verify sitemap is reachable at https://abdullahaslam.me/sitemap-index.xml after deployment
 
 ## Deployment (Vercel)
 
@@ -91,5 +92,7 @@ public/
 
 ## Hydration notes
 
-Current page mounts all main sections with client:load in src/pages/index.astro.
-That gives immediate interactivity and consistent motion behavior across sections.
+Current page uses a mixed hydration strategy in src/pages/index.astro:
+- Above-the-fold interactive sections hydrate with client:load.
+- Decorative/secondary and below-the-fold sections hydrate with client:idle/client:visible.
+This keeps first-load JS lighter while preserving interaction quality.
